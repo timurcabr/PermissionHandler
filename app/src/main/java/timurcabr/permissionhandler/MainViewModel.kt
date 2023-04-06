@@ -8,14 +8,14 @@ class MainViewModel : ViewModel() {
 	val permissionDialogQueue = mutableStateListOf<String>()
 	
 	fun dismissDialog() {
-		permissionDialogQueue.removeLast()
+		permissionDialogQueue.removeFirst()
 	}
 	
 	fun onPermissionResult(
 		permission: String, onGranted: Boolean
 	) {
-		if (!onGranted) {
-			permissionDialogQueue.add(0, permission)
+		if (!onGranted && !permissionDialogQueue.contains(permission)) {
+			permissionDialogQueue.add(permission)
 		}
 	}
 	

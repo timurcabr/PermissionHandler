@@ -31,6 +31,12 @@ class MainActivity : AppCompatActivity() {
 				val viewModel = viewModel<MainViewModel>()
 				val permissionQueue = viewModel.permissionDialogQueue
 				
+				val permissionsToRequest = arrayOf(
+					Manifest.permission.RECORD_AUDIO,
+					Manifest.permission.CALL_PHONE,
+					Manifest.permission.CAMERA
+				)
+				
 				val cameraPermissionActivityResult =
 					rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission(),
 						onResult = { isGranted ->
@@ -42,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 				val multiplePermissionActivityResult =
 					rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions(),
 						onResult = { perms ->
-							perms.keys.forEach { permission ->
+							permissionsToRequest.forEach { permission ->
 								viewModel.onPermissionResult(
 									permission = permission, onGranted = perms[permission] == true
 								)
@@ -67,11 +73,7 @@ class MainActivity : AppCompatActivity() {
 					
 					Button(onClick = {
 						multiplePermissionActivityResult.launch(
-							arrayOf(
-								Manifest.permission.RECORD_AUDIO,
-								Manifest.permission.CALL_PHONE,
-								Manifest.permission.CAMERA
-							)
+							permissionsToRequest
 						)
 					}) {
 						Text(text = "Request multiple permissions")
